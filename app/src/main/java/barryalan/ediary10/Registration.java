@@ -60,12 +60,14 @@ public class Registration extends AppCompatActivity {
                         if(!(db.isEmailTaken(et_email))){ //check if email is taken
                            if(isUsernameLengthValid(et_username)) { //check if username is the allowed length
                                if(isPasswordLengthValid(et_password)) { //check if password is the allowed length
-                                   if(!(isUsernameInPassword(et_username, et_password))) { //check if username is included in the password
-                                       if(doPasswordsMatch(et_password,et_passwordVerification)){ //check if password fields input matches
-                                           if(isEmailExtensionValid(et_email)){ //check if email extension is valid Ex. @gmail.com
-                                               db.addUser(new User(et_username.getText().toString(), et_email.getText().toString(), et_password.getText().toString()));
-                                               db.close();
-                                               gotoLoginPage();
+                                   if(doesPasswordContainNumber(et_password)) { //check if password has at least one number
+                                       if(!(isUsernameInPassword(et_username, et_password))) { //check if username is included in the password
+                                           if(doPasswordsMatch(et_password,et_passwordVerification)){ //check if password fields input matches
+                                               if(isEmailExtensionValid(et_email)){ //check if email extension is valid Ex. @gmail.com
+                                                   db.addUser(new User(et_username.getText().toString(), et_email.getText().toString(), et_password.getText().toString()));
+                                                   db.close();
+                                                   gotoLoginPage();
+                                               }
                                            }
                                        }
                                    }
@@ -170,6 +172,17 @@ public class Registration extends AppCompatActivity {
             et_password.setError("Username cannot be part of your password");
             return true;
         }
+        return false;
+    }
+
+    //CHECKS IF PASSWORD CONTAINS A NUMBER----------------------------------------------------------
+    public boolean doesPasswordContainNumber(EditText et_password){
+        //.* means any character from 0 to infinite occurence, than the \\d+
+        // (double backslash I think is just to escape the second backslash) and \d+ means a digit from 1 time to infinite.
+        if(et_password.getText().toString().contains(".*\\d+.*")) {
+            return true;
+        }
+        et_password.setError("Password must contain at least one number");
         return false;
     }
 
