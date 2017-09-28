@@ -4,17 +4,22 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Toast;
 
 public class Login extends AppCompatActivity {
 
     Button btn_signin;
-    Button btn_forgotLoging;
-    EditText username;
-    EditText password;
+    Button btn_forgotLogin;
+    EditText et_username;
+    EditText et_password;
+    CheckBox cb_passwordVisibility;
     int numberOfTries = 0;
 
     //EVERYTHING THAT HAPPENS IN LOGIN PAGE RUNS FROM HERE-----------------------------------
@@ -25,9 +30,10 @@ public class Login extends AppCompatActivity {
 
         //CREATE AND LINK BUTTONS AND TEXT BOXES TO THE ONES ON THE DISPLAY
         btn_signin = (Button) findViewById(R.id.btn_Lsignin);
-        btn_forgotLoging = (Button) findViewById(R.id.btn_forgotLogin);
-        username = (EditText) findViewById(R.id.et_Lusername);
-        password = (EditText) findViewById(R.id.et_Lpassword);
+        btn_forgotLogin = (Button) findViewById(R.id.btn_LforgotLogin);
+        et_username = (EditText) findViewById(R.id.et_Lusername);
+        et_password = (EditText) findViewById(R.id.et_Lpassword);
+        cb_passwordVisibility = (CheckBox) findViewById(R.id.cb_LshowPassword);
 
         //IF THE BUTTON LINKED TO LOGIN IS CLICKED
         btn_signin.setOnClickListener(new View.OnClickListener() {
@@ -35,10 +41,25 @@ public class Login extends AppCompatActivity {
             public void onClick(View v) {
 
                 //CHECK IF THE USER INPUTTED A USERNAME AND PASSWORD
-                if (!(isEmpty(username)) & !(isEmpty(password))) {
-                    if(isValid(username, password)) { //CHECK IF INFO IS A VALID USERS'
-                       // gotoMockActivity(v); // go to a different page(activity) to show that you have logged in
+                if (!(isEmpty(et_username)) & !(isEmpty(et_password))) {
+                    if (isValid(et_username, et_password)) { //CHECK IF INFO IS A VALID USERS'
+                        // gotoMockActivity(v); // go to a different page(activity) to show that you have logged in
                     }
+                }
+            }
+        });
+
+
+        //ALLOWS THE USE OF THE SHOW PASSWORD FEATURE IN THE LOGIN PAGE-----------------------------
+        cb_passwordVisibility.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                //CHECKBOX STATUS IS CHANGED FROM UNCHECKED TO CHECKED
+                if (!isChecked) {
+                    // SHOW PASSWORD
+                    et_password.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                } else {
+                    // MASK PASSWORD
+                    et_password.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
                 }
             }
         });
@@ -48,8 +69,8 @@ public class Login extends AppCompatActivity {
     public boolean isEmpty(EditText edittext) {
 
         String message;
-        String hint =  edittext.getHint().toString();
-        switch (hint){
+        String hint = edittext.getHint().toString();
+        switch (hint) {
             case "Name":
                 message = "Enter a name";
                 break;
@@ -105,38 +126,39 @@ public class Login extends AppCompatActivity {
         String storedPassword = lbh.getUserPassword(userName);
 
         //GIVES YOU THREE TRIES UNTIL THE SYSTEM ALLOWS FOR A FORGOT LOGIN
-        if(numberOfTries > 1){
-            btn_forgotLoging.setVisibility(View.VISIBLE);
+        if (numberOfTries > 1) {
+            btn_forgotLogin.setVisibility(View.VISIBLE);
         }
         //VALIDATE THE PASSWORD WITH THE ONE ON THE DATABASE
-        if(password.equals(storedPassword)) {
+        if (password.equals(storedPassword)) {
             toast.show();
             return true;
-        }
-        else {
+        } else {
             toast1.show();
-            numberOfTries ++;
+            numberOfTries++;
             return false;
         }
     }
 
     //LINK THE LOGIN PAGE TO THE REGISTRATION PAGE THROUGH THE BUTTON-------------------------------
-    public void gotoRegistrationActivity(View view){
+    public void gotoRegistrationActivity(View view) {
         Intent name = new Intent(this, Registration.class);
         startActivity(name);
     }
 
     //LINK THE LOGIN PAGE TO THE INSIDE OF THE APP--------------------------------------------------
-    public void gotoMockActivity(View view){
+    public void gotoMockActivity(View view) {
         Intent name = new Intent(this, mock.class);
         startActivity(name);
     }
 
     //LINK THE LOGIN PAGE TO THE INSIDE OF THE APP--------------------------------------------------
-    public void gotoForgotLoginActivity(View view){
+    public void gotoForgotLoginActivity(View view) {
         Intent name = new Intent(this, forgotLogin.class);
         startActivity(name);
     }
+
+
 }
 
 

@@ -4,8 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -15,8 +19,11 @@ public class Registration extends AppCompatActivity {
     Button btn_submit;
     EditText et_name;
     EditText et_password;
+    EditText et_passwordVerification;
     EditText et_username;
     EditText et_email;
+    CheckBox cb_passwordVisibility;
+
     //LOGIN PAGE BUTTONS
     EditText et_username1;
     EditText et_password1;
@@ -31,8 +38,10 @@ public class Registration extends AppCompatActivity {
         btn_submit = (Button) findViewById(R.id.btn_Rsubmit);
         et_name = (EditText) findViewById(R.id.et_Rname);
         et_password = (EditText) findViewById(R.id.et_Rpassword);
+        et_passwordVerification = (EditText) findViewById(R.id.et_RpasswordVerification);
         et_username = (EditText) findViewById(R.id.et_Rusername);
         et_email = (EditText) findViewById(R.id.et_Remail);
+        cb_passwordVisibility = (CheckBox) findViewById (R.id.cb_RpasswordVisibility);
 
         //CREATE AND LINK LOGIN PAGE BUTTONS AND TEXT BOXES TO THE ONES ON THE DISPLAY
         et_password1 = (EditText) findViewById(R.id.et_Lpassword);
@@ -52,16 +61,36 @@ public class Registration extends AppCompatActivity {
                            if(isUsernameLengthValid(et_username)) { //check if username is the allowed length
                                if(isPasswordLengthValid(et_password)) { //check if password is the allowed length
                                    if(!(isUsernameInPassword(et_username, et_password))) { //check if username is included in the password
-                                       if(isEmailExtensionValid(et_email)){ //check if email extension is valid Ex. @gmail.com
-                                           db.addUser(new User(et_username.getText().toString(), et_email.getText().toString(), et_password.getText().toString()));
-                                           db.close();
-                                           gotoLoginPage();
+                                       if(doPasswordsMatch(et_password,et_passwordVerification)){ //check if password fields input matches
+                                           if(isEmailExtensionValid(et_email)){ //check if email extension is valid Ex. @gmail.com
+                                               db.addUser(new User(et_username.getText().toString(), et_email.getText().toString(), et_password.getText().toString()));
+                                               db.close();
+                                               gotoLoginPage();
+                                           }
                                        }
                                    }
                                }
                            }
                         }
                     }
+                }
+            }
+        });
+
+        //ALLOWS THE USE OF THE SHOW PASSWORD FEATURE IN THE LOGIN PAGE-----------------------------
+
+        cb_passwordVisibility.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                //CHECKBOX STATUS IS CHANGED FROM UNCHECKED TO CHECKED
+                if (!isChecked) {
+                    // SHOW PASSWORDS
+                    et_password.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                    et_passwordVerification.setTransformationMethod(PasswordTransformationMethod.getInstance());
+
+                } else {
+                    // MASK PASSWORDS
+                    et_password.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                    et_passwordVerification.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
                 }
             }
         });
@@ -141,6 +170,15 @@ public class Registration extends AppCompatActivity {
             et_password.setError("Username cannot be part of your password");
             return true;
         }
+        return false;
+    }
+
+    //CHECKS IF PASSWORD VERIFICATION MATCHES PASSWORD----------------------------------------------
+    public boolean doPasswordsMatch(EditText et_password, EditText et_passwordVerification){
+        if(et_passwordVerification.getText().toString().matches(et_password.getText().toString())){
+            return true;
+        }
+        et_passwordVerification.setError("Passwords do not match");
         return false;
     }
 
