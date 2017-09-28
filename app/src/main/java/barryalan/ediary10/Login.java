@@ -17,6 +17,7 @@ public class Login extends AppCompatActivity {
     EditText password;
     int numberOfTries = 0;
 
+    //EVERYTHING THAT HAPPENS IN LOGIN PAGE RUNS FROM HERE-----------------------------------
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,8 +44,7 @@ public class Login extends AppCompatActivity {
         });
     }
 
-
-    //CHECKS IF THE TEXT BOX IS EMPTY OR NOT
+    //CHECKS IF THE TEXT BOX IS EMPTY OR NOT--------------------------------------------------------
     public boolean isEmpty(EditText edittext) {
 
         String message;
@@ -79,7 +79,7 @@ public class Login extends AppCompatActivity {
 
     }
 
-    //CHECKS IF USERNAME AND PASSWORD ARE IN THE DATABASE AND MATCH EACHOTHER
+    //CHECKS IF USERNAME AND PASSWORD ARE IN THE DATABASE AND MATCH EACHOTHER-----------------------
     public boolean isValid(EditText usernametext, EditText passwordtext) {
 
         //CREATING THE LOGIN SUCCESSFUL MESSAGE
@@ -120,20 +120,19 @@ public class Login extends AppCompatActivity {
         }
     }
 
-    //LINK THE LOGIN PAGE TO THE REGISTRATION PAGE THROUGH THE BUTTON
+    //LINK THE LOGIN PAGE TO THE REGISTRATION PAGE THROUGH THE BUTTON-------------------------------
     public void gotoRegistrationActivity(View view){
         Intent name = new Intent(this, Registration.class);
         startActivity(name);
     }
 
-    //LINK THE LOGIN PAGE TO THE INSIDE OF THE APP
+    //LINK THE LOGIN PAGE TO THE INSIDE OF THE APP--------------------------------------------------
     public void gotoMockActivity(View view){
         Intent name = new Intent(this, mock.class);
         startActivity(name);
     }
 
-
-    //LINK THE LOGIN PAGE TO THE INSIDE OF THE APP
+    //LINK THE LOGIN PAGE TO THE INSIDE OF THE APP--------------------------------------------------
     public void gotoForgotLoginActivity(View view){
         Intent name = new Intent(this, forgotLogin.class);
         startActivity(name);

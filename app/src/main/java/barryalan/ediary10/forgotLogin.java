@@ -19,6 +19,7 @@ public class forgotLogin extends AppCompatActivity{
     EditText et_username;
     EditText et_email;
 
+    //EVERYTHING THAT HAPPENS IN FORGOT LOGIN PAGE RUNS FROM HERE-----------------------------------
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,7 +51,6 @@ public class forgotLogin extends AppCompatActivity{
 
     //first email
     protected void sendEmail(String destinationEmail, String subjectMessage, String bodyMessage ) {
-        Log.i("Send email", "hi");
         String[] TO = {destinationEmail};
 
         Intent emailIntent = new Intent(Intent.ACTION_SEND);
@@ -64,7 +64,6 @@ public class forgotLogin extends AppCompatActivity{
         try {
             startActivity(Intent.createChooser(emailIntent, "Send mail..."));
             finish();
-            Log.i("Email sent", "bye");
         } catch (android.content.ActivityNotFoundException ex) {
             Toast.makeText(forgotLogin.this, "There is no email client installed.", Toast.LENGTH_SHORT).show();
         }

@@ -20,16 +20,16 @@ public class testDatabase extends AppCompatActivity{
         super.onCreate(savedInstanceState);
 
 
-        //CREATE A NEW INSTANCE OF THE DATABASE FOR ACCESS
+        //CREATE A NEW INSTANCE OF THE DATABASE FOR ACCESS------------------------------------------
         LoginDatabaseHelper lbh = new LoginDatabaseHelper(this);
 
-        //CREATE AND ADD A USER
+        //CREATE AND ADD A USER---------------------------------------------------------------------
         lbh.addUser(new User("kiffany", "kiffacy@data.com", "workorbust"));
 
-        //FILL A LIST WITH ALL THE USERS ON THE DATABASE
+        //FILL A LIST WITH ALL THE USERS ON THE DATABASE--------------------------------------------
         List<User> users = lbh.getUsers();
 
-        //ITERATE THROUGH THE LIST OF USERS TO GET THEIR INFO INTO TEX STRING
+        //ITERATE THROUGH THE LIST OF USERS TO GET THEIR INFO INTO TEX STRING-----------------------
         for(User u: users)
         {
             String log = "ID:" + u.getId() + ", Name: " + u.getUserName() + ", Email " + u.getUserEmail() + " ,Password " + u.getuserPassword() + "\n";

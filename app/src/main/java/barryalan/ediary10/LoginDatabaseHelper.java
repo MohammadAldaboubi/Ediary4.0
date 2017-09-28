@@ -71,7 +71,6 @@ class LoginDatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-
     //UPDATES USER RECORDS ON THE DATABASE, RETURNS?------------------------------------------------
     public int updateUser(User user) {
         //OPEN DATABASE?

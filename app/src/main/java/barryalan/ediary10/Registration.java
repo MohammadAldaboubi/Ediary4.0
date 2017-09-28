@@ -9,8 +9,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import static android.R.id.message;
-
 public class Registration extends AppCompatActivity {
 
     //REGISTRATION PAGE BUTTONS
@@ -23,6 +21,7 @@ public class Registration extends AppCompatActivity {
     EditText et_username1;
     EditText et_password1;
 
+    //EVERYTHING THAT HAPPENS IN REGISTRATION PAGE RUNS FROM HERE-----------------------------------
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,23 +41,25 @@ public class Registration extends AppCompatActivity {
         //CREATE A NEW INSTANCE OF THE DATABASE FOR ACCESS
         final LoginDatabaseHelper db = new LoginDatabaseHelper(this);
 
-        //IF THE BUTTON LINKED TO BTN IS CLICKED
+        //IF THE BUTTON LINKED TO BTN IS CLICKED----------------------------------------------------
         btn_submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //IF USER INPUTS SOMETHING INTO ALL FIELDS
+                //CONSTRAINTS CHECKS ON THE REGISTRATION PAGE FIELDS
                 if(!(isEmpty(et_name)) & !(isEmpty(et_password)) & !(isEmpty(et_username)) & !(isEmpty(et_email))){//check if all boxes have an input
                     if(!(db.isUsernameTaken(et_username))){ //check if username is taken
                         if(!(db.isEmailTaken(et_email))){ //check if email is taken
-                            db.addUser(new User(et_username.getText().toString(), et_email.getText().toString(), et_password.getText().toString()));
-                            db.close();
-                            gotoLoginPage();
-                        }
-                        else{
-                            Context context = getApplicationContext();
-                            int duration = Toast.LENGTH_SHORT;
-                            Toast toast = Toast.makeText(context, "Email is already taken" , duration);
-                            toast.show();
+                           if(isUsernameLengthValid(et_username)) { //check if username is the allowed length
+                               if(isPasswordLengthValid(et_password)) { //check if password is the allowed length
+                                   if(!(isUsernameInPassword(et_username, et_password))) { //check if username is included in the password
+                                       if(isEmailExtensionValid(et_email)){ //check if email extension is valid Ex. @gmail.com
+                                           db.addUser(new User(et_username.getText().toString(), et_email.getText().toString(), et_password.getText().toString()));
+                                           db.close();
+                                           gotoLoginPage();
+                                       }
+                                   }
+                               }
+                           }
                         }
                     }
                 }
@@ -67,13 +68,13 @@ public class Registration extends AppCompatActivity {
 
     }
 
-    //LINK THE REGISTRATION PAGE TO THE LOGIN PAGE THROUGH THE BUTTON
+    //LINKS THE REGISTRATION PAGE TO THE LOGIN PAGE THROUGH THE BUTTON------------------------------
     private void gotoLoginPage() {
         Intent name = new Intent(this, Login.class);
         startActivity(name);
     }
 
-    //CHECKS IF THE TEXT BOX IS EMPTY OR NOT
+    //CHECKS IF THE TEXT BOX IS EMPTY --------------------------------------------------------------
     public boolean isEmpty(EditText edittext) {
 
         String message;
@@ -116,6 +117,43 @@ public class Registration extends AppCompatActivity {
 
     }
 
+    //CHECKS IF USERNAME IS BETWEEN 3 AND 21 CHARACTERS---------------------------------------------
+    public boolean isUsernameLengthValid(EditText et_username){
+        if(et_username.getText().length() > 1 & et_username.getText().length() < 22){
+            return true;
+        }
+        et_username.setError("Username must between 3 and 21 characters long");
+        return false;
+    }
+
+    //CHECKS IF PASSWORD IS BETWEEN 3 AND 16 CHARACTERS---------------------------------------------
+    public boolean isPasswordLengthValid(EditText et_password){
+        if(et_password.getText().length() > 1 & et_password.getText().length() < 17){
+            return true;
+        }
+        et_password.setError("Password must between 2 and 16 characters long");
+        return false;
+    }
+
+    //CHECKS IF USERNAME IS INCLUDED IN PASSWORD----------------------------------------------------
+    public boolean isUsernameInPassword(EditText et_username, EditText et_password){
+        if(et_password.getText().toString().contains(et_username.getText().toString())) {
+            et_password.setError("Username cannot be part of your password");
+            return true;
+        }
+        return false;
+    }
+
+    //CHECKS IF THE EMAIL ADDRESS EXTENSION IS VALID------------------------------------------------
+    public boolean isEmailExtensionValid(EditText et_email){
+        if(et_email.getText().toString().endsWith("@hotmail.com") || et_email.getText().toString().endsWith("@gmail.com") ||
+            et_email.getText().toString().endsWith("@txwes.edu") || et_email.getText().toString().endsWith("@yahoo.com") ||
+                    et_email.getText().toString().endsWith("@outlook.com") || et_email.getText().toString().endsWith("@icloud.com")) {
+            return true;
+        }
+        et_email.setError("Email is not valid or extension (Ex. @gmail.com) is not supported");
+        return false;
+    }
 }
 
 
