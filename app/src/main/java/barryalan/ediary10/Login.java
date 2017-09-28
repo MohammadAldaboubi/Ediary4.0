@@ -47,7 +47,7 @@ public class Login extends AppCompatActivity {
     //CHECKS IF THE TEXT BOX IS EMPTY OR NOT
     public boolean isEmpty(EditText edittext) {
 
-        String message = "";
+        String message;
         String hint =  edittext.getHint().toString();
         switch (hint){
             case "Name":

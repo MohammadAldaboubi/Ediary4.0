@@ -9,6 +9,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import static android.R.id.message;
+
 public class Registration extends AppCompatActivity {
 
     //REGISTRATION PAGE BUTTONS
@@ -45,9 +47,20 @@ public class Registration extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //IF USER INPUTS SOMETHING INTO ALL FIELDS
-                if(!(isEmpty(et_name)) & !(isEmpty(et_password)) & !(isEmpty(et_username)) & !(isEmpty(et_email))){
-                    db.addUser(new User(et_username.getText().toString(), et_email.getText().toString(), et_password.getText().toString()));
-                    gotoLoginPage();
+                if(!(isEmpty(et_name)) & !(isEmpty(et_password)) & !(isEmpty(et_username)) & !(isEmpty(et_email))){//check if all boxes have an input
+                    if(!(db.isUsernameTaken(et_username))){ //check if username is taken
+                        if(!(db.isEmailTaken(et_email))){ //check if email is taken
+                            db.addUser(new User(et_username.getText().toString(), et_email.getText().toString(), et_password.getText().toString()));
+                            db.close();
+                            gotoLoginPage();
+                        }
+                        else{
+                            Context context = getApplicationContext();
+                            int duration = Toast.LENGTH_SHORT;
+                            Toast toast = Toast.makeText(context, "Email is already taken" , duration);
+                            toast.show();
+                        }
+                    }
                 }
             }
         });
@@ -63,7 +76,7 @@ public class Registration extends AppCompatActivity {
     //CHECKS IF THE TEXT BOX IS EMPTY OR NOT
     public boolean isEmpty(EditText edittext) {
 
-        String message = "";
+        String message;
         String hint =  edittext.getHint().toString();
         switch (hint){
             case "Name":
@@ -102,5 +115,8 @@ public class Registration extends AppCompatActivity {
         }
 
     }
+
 }
+
+
 

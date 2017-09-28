@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.widget.EditText;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,29 +14,26 @@ import java.util.List;
  * Created by Al on 9/20/2017.
  */
 
-public class LoginDatabaseHelper extends SQLiteOpenHelper {
-    //CLASS VARIABLES----------------------------------------------------------------------
+class LoginDatabaseHelper extends SQLiteOpenHelper {
+    //CLASS VARIABLES-------------------------------------------------------------------------------
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "LoginManager";
-    public static final String TABLE_USER = "users";
+    private static final String TABLE_USER = "users";
 
-    //USER TABLE COLUMN NAMES--------------------------------------------------------------
-    public static final String COLUMN_USER_ID = "user_id";
-    public static final String COLUMN_USER_NAME = "user_name";
-    public static final String COLUMN_USER_EMAIL = "user_email";
-    public static final String COLUMN_USER_PASSWORD = "user_password";
+    //USER TABLE COLUMN NAMES-----------------------------------------------------------------------
+    private static final String COLUMN_USER_ID = "user_id";
+    private static final String COLUMN_USER_NAME = "user_name";
+    private static final String COLUMN_USER_EMAIL = "user_email";
+    private static final String COLUMN_USER_PASSWORD = "user_password";
 
 
-    //TABLE SQL QUERY-----------------------------------------------------------------------
-    private String DROP_USER_TABLE = "DROP TABLE IF EXISTS " + TABLE_USER;
-
-    //CONSTRUCTOR---------------------------------------------------------------------------
-    public LoginDatabaseHelper(Context context) {
+    //CONSTRUCTOR-----------------------------------------------------------------------------------
+    LoginDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
 
-    //RUNS WHEN THE DATABASE IS CREATED(APP STARTUP)----------------------------------------
+    //RUNS WHEN THE DATABASE IS CREATED(APP STARTUP)------------------------------------------------
     @Override
     public void onCreate(SQLiteDatabase db) {
         //CREATES QUERY
@@ -47,15 +45,16 @@ public class LoginDatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_USER_TABLE);
     }
 
-
+    //NO CLUE WHAT THIS DOES------------------------------------------------------------------------
     @Override
     public void onUpgrade(SQLiteDatabase db, int i, int i1) {
+        String DROP_USER_TABLE = "DROP TABLE IF EXISTS " + TABLE_USER;
         db.execSQL(DROP_USER_TABLE);
         onCreate(db);
     }
 
-    //CREATES USER COLUMNS, MERGES THEM INTO A TABLE AND INSERTS IT INTO DATABASE-----------
-    public void addUser(User user) {
+    //CREATES USER COLUMNS, MERGES THEM INTO A TABLE AND INSERTS IT INTO DATABASE-------------------
+    void addUser(User user) {
 
         //OPEN DATABASE??
         SQLiteDatabase db = this.getWritableDatabase();
@@ -72,31 +71,38 @@ public class LoginDatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    //online version
-    User getUser(int id) {
 
-        //OPEN DATABASE??
-        SQLiteDatabase db = this.getReadableDatabase();
+    //UPDATES USER RECORDS ON THE DATABASE, RETURNS?------------------------------------------------
+    public int updateUser(User user) {
+        //OPEN DATABASE?
+        SQLiteDatabase db = this.getWritableDatabase();
 
-        //CREATE CURSOR WHICH ALLOWS SEARCH WITHIN A DATABASE TABLE
-        Cursor cursor = db.query(TABLE_USER, new String[]{COLUMN_USER_ID,COLUMN_USER_NAME,COLUMN_USER_EMAIL,COLUMN_USER_PASSWORD}, COLUMN_USER_ID + "=?",
-                new String[]{String.valueOf(id)}, null, null, null, null);
+        //CREATING COLUMNS WITH INFORMATION FROM THE PARAMATER AND INPUTING THEM INTO VALUES
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_USER_NAME, user.getUserName());
+        values.put(COLUMN_USER_EMAIL, user.getUserEmail());
+        values.put(COLUMN_USER_PASSWORD, user.getuserPassword());
 
-        //??
-        if(cursor !=null) {
-            cursor.moveToFirst();
-        }
-
-        //CREATES NEW USER WITH THE DATA COLLECTED FROM THE CURSOR
-        User user = new User(Integer.parseInt(cursor.getString(0)), cursor.getString(1), cursor.getString(2), cursor.getString(3));
-
-        return user;
+        //UPDATE ROWS IN DATABASE WITH VALUES (INFO FROM PARAMETER)
+        return db.update(TABLE_USER, values, COLUMN_USER_ID + "= ?", new String[]{String.valueOf(user.getId())});
 
     }
 
+    //DELETE A USER FROM DATABASE BY ID-------------------------------------------------------------
+    public void deleteUser(User user)
+    {
+        //OPEN DATABASE?
+        SQLiteDatabase db = this.getWritableDatabase();
 
-    //RETURNS A LIST OF USERS WHICH ARE ON THE DATABASE, CAN BE USED TO ACCESS THEIR DATA
-    public List<User> getUsers()
+        //DELETE USER
+        db.delete(TABLE_USER, COLUMN_USER_ID + "= ?", new String[]{String.valueOf(user.getId())});
+
+        //ALWAYS CLOSE THE DATABASE
+        db.close();
+    }
+
+    //RETURNS A LIST OF USERS WHICH ARE ON THE DATABASE, CAN BE USED TO ACCESS THEIR DATA-----------
+    List<User> getUsers()
     {
         //CREATES NEW LIST
         List<User> userArrayList = new ArrayList<>();
@@ -126,40 +132,52 @@ public class LoginDatabaseHelper extends SQLiteOpenHelper {
                 //IF THERE IS A NEXT TABLE GO TO IT AND REPEAT THE LOOP
             } while (cursor.moveToNext());
         }
+        cursor.close();
         return userArrayList;
     }
 
-    //UPDATES USER RECORDS ON THE DATABASE, RETURNS?----------------------------------------
-    public int updateUser(User user) {
+    //RETURNS THE NUMBER OF USERS IN THE DATABASE---------------------------------------------------
+    public int getUserCount(){
+        //??
+        String countUserQuery = " SELECT * FROM" + TABLE_USER;
+
         //OPEN DATABASE?
-        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = this.getReadableDatabase();
 
-        //CREATING COLUMNS WITH INFORMATION FROM THE PARAMATER AND INPUTING THEM INTO VALUES
-        ContentValues values = new ContentValues();
-        values.put(COLUMN_USER_NAME, user.getUserName());
-        values.put(COLUMN_USER_EMAIL, user.getUserEmail());
-        values.put(COLUMN_USER_PASSWORD, user.getuserPassword());
+        //CREATES CURSOR, MAKES IT GO THROUGH THE QUERY AND COUNT IT
+        Cursor cursor = db.rawQuery(countUserQuery, null);
 
-        //UPDATE ROWS IN DATABASE WITH VALUES (INFO FROM PARAMETER)
-        return db.update(TABLE_USER, values, COLUMN_USER_ID + "= ?", new String[]{String.valueOf(user.getId())});
+        //CLOSES CURSOR
+        cursor.close();
+
+        return cursor.getCount();
+    }
+
+    //RETURNS A USERS OBECT FOR THE ID PROVIDED online version--------------------------------------
+    User getUser(int id) {
+
+        //OPEN DATABASE??
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        //CREATE CURSOR WHICH ALLOWS SEARCH WITHIN A DATABASE TABLE
+        Cursor cursor = db.query(TABLE_USER, new String[]{COLUMN_USER_ID,COLUMN_USER_NAME,COLUMN_USER_EMAIL,COLUMN_USER_PASSWORD}, COLUMN_USER_ID + "=?",
+                new String[]{String.valueOf(id)}, null, null, null, null);
+
+        //??
+        if(cursor !=null) {
+            cursor.moveToFirst();
+            cursor.close();
+        }
+
+        //CREATES NEW USER WITH THE DATA COLLECTED FROM THE CURSOR
+       // User user = new User(Integer.parseInt(cursor.getString(0)), cursor.getString(1), cursor.getString(2), cursor.getString(3));
+
+        return new User(Integer.parseInt(cursor.getString(0)), cursor.getString(1), cursor.getString(2), cursor.getString(3));
 
     }
 
-    //DELETE A USER FROM DATABASE BY ID-----------------------------------------------------
-    public void deleteUser(User user)
-    {
-        //OPEN DATABASE?
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        //DELETE USER
-        db.delete(TABLE_USER, COLUMN_USER_ID + "= ?", new String[]{String.valueOf(user.getId())});
-
-        //ALWAYS CLOSE THE DATABASE
-        db.close();
-    }
-
-    //RETURNS THE PASSWORD FOR THE USERNAME PROVIDED IF IT EXISTS IN THE DATABASE
-    public String getUserPassword(String userName)
+    //RETURNS THE PASSWORD FOR THE USERNAME PROVIDED IF IT EXISTS IN THE DATABASE-------------------
+    String getUserPassword(String userName)
     {
         //OPEN DATABASE
         SQLiteDatabase db = this.getWritableDatabase();
@@ -167,7 +185,7 @@ public class LoginDatabaseHelper extends SQLiteOpenHelper {
         //CREATE CURSOR WHICH ITERATES THROUGH DATABASE LOOKING FOR THE USERNAME
         Cursor cursor=db.query(TABLE_USER, null, COLUMN_USER_NAME + " =?", new String[]{userName}, null, null, null);
 
-        if(cursor.getCount()<1) {//IF THE USERNAME IS NOT FOUND MEANING IT FOUNDED LESS THAN 1 TIMES
+        if(cursor.getCount()<1) {//IF THE USERNAME IS NOT FOUND MEANING IT IS FOUND LESS THAN 1 TIMES
             cursor.close();
             return "Username does not exist";
         }
@@ -178,8 +196,8 @@ public class LoginDatabaseHelper extends SQLiteOpenHelper {
         return password;
     }
 
-    //RETURNS THE EMAIL FOR THE USERNAME PROVIDED IF IT EXISTS IN THE DATABASE
-    public String getUserEmail(String userName)
+    //RETURNS THE EMAIL FOR THE USERNAME PROVIDED IF IT EXISTS IN THE DATABASE----------------------
+    String getUserEmail(String userName)
     {
         //OPEN DATABASE
         SQLiteDatabase db = this.getWritableDatabase();
@@ -198,20 +216,42 @@ public class LoginDatabaseHelper extends SQLiteOpenHelper {
         return password;
     }
 
-    //RETURNS THE NUMBER OF USERS IN THE DATABASE-------------------------------------------
-    public int getUserCount(){
-        //??
-        String countUserQuery = " SELECT * FROM" + TABLE_USER;
+    //CHECKS IF THE USERNAME PROVIDED IS IN THE DATABASE--------------------------------------------
+    boolean isUsernameTaken(EditText et_username)
+    {
+        //OPEN DATABASE
+        SQLiteDatabase db = this.getWritableDatabase();
 
-        //OPEN DATABASE?
-        SQLiteDatabase db = this.getReadableDatabase();
+        //CREATE CURSOR WHICH ITERATES THROUGH DATABASE LOOKING FOR THE USERNAME
+        Cursor cursor=db.query(TABLE_USER, null, COLUMN_USER_NAME + " =?", new String[]{et_username.getText().toString()}, null, null, null);
 
-        //CREATES CURSOR, MAKES IT GO THROUGH THE QUERY AND COUNT IT
-        Cursor cursor = db.rawQuery(countUserQuery, null);
-
-        //CLOSES CURSOR
+        if(cursor.getCount()<1) {//IF THE USERNAME IS NOT FOUND MEANING IT IS FOUND LESS THAN 1 TIMES
+            cursor.close();
+            return false;
+        }
+        cursor.moveToFirst();
         cursor.close();
-
-        return cursor.getCount();
+        et_username.setError("Username is already taken");//message is chosen on switch statement above
+        return true;
     }
+
+    //CHECKS IF THE USERNAME PROVIDED IS IN THE DATABASE--------------------------------------------
+    boolean isEmailTaken(EditText et_email)
+    {
+        //OPEN DATABASE
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        //CREATE CURSOR WHICH ITERATES THROUGH DATABASE LOOKING FOR THE USERNAME
+        Cursor cursor=db.query(TABLE_USER, null, COLUMN_USER_EMAIL + " =?", new String[]{et_email.getText().toString()}, null, null, null);
+
+        if(cursor.getCount()<1) {//IF THE USERNAME IS NOT FOUND MEANING IT IS FOUND LESS THAN 1 TIMES
+            cursor.close();
+            return false;
+        }
+        cursor.moveToFirst();
+        cursor.close();
+        et_email.setError("Email address is already in use");//message is chosen on switch statement above
+        return true;
+    }
+
 }
