@@ -152,7 +152,7 @@ class LoginDatabaseHelper extends SQLiteOpenHelper {
         return cursor.getCount();
     }
 
-    //RETURNS A USERS OBECT FOR THE ID PROVIDED online version--------------------------------------
+    //RETURNS A USERS OBJECT FOR THE ID PROVIDED online version--------------------------------------
     User getUser(int id) {
 
         //OPEN DATABASE??
@@ -175,20 +175,44 @@ class LoginDatabaseHelper extends SQLiteOpenHelper {
 
     }
 
+    //RETURNS THE USERNAME FOR THE EMAIL PROVIDED IF IT EXISTS IN THE DATABASE-----------------------
+    String getUsername(String email)
+    {
+        //OPEN DATABASE
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        //CREATE CURSOR WHICH ITERATES THROUGH DATABASE'S EMAIL TABLE LOOKING FOR THE EMAIL PROVIDED
+        Cursor cursor=db.query(TABLE_USER, null, COLUMN_USER_EMAIL + " =?", new String[]{email}, null, null, null);
+
+        //IF THE EMAIL IS NOT FOUND IN THE DATABASE AT LEAST ONCE
+        if(cursor.getCount()<1) {
+            cursor.close();
+            return "email does not exist";
+        }
+        cursor.moveToFirst();
+
+        //ASSIGN THE USERNAME ASSIGNED TO THIS EMAIL TO THE VARIABLE NAME
+        String name= cursor.getString(cursor.getColumnIndex( COLUMN_USER_NAME));
+        cursor.close();
+        return name;
+    }
+
     //RETURNS THE PASSWORD FOR THE USERNAME PROVIDED IF IT EXISTS IN THE DATABASE-------------------
     String getUserPassword(String userName)
     {
         //OPEN DATABASE
         SQLiteDatabase db = this.getWritableDatabase();
 
-        //CREATE CURSOR WHICH ITERATES THROUGH DATABASE LOOKING FOR THE USERNAME
+        //CREATE CURSOR WHICH ITERATES THROUGH DATABASE'S USERNAME TABLE LOOKING FOR THE USERNAME PROVIDED
         Cursor cursor=db.query(TABLE_USER, null, COLUMN_USER_NAME + " =?", new String[]{userName}, null, null, null);
 
-        if(cursor.getCount()<1) {//IF THE USERNAME IS NOT FOUND MEANING IT IS FOUND LESS THAN 1 TIMES
+        //IF THE USERNAME IS NOT FOUND IN THE DATABASE AT LEAST ONCE
+        if(cursor.getCount()<1) {
             cursor.close();
             return "Username does not exist";
         }
         cursor.moveToFirst();
+
         //ASSIGN THE PASSWORD ASSIGNED TO THIS USERNAME TO THE VARIABLE PASSWORD
         String password= cursor.getString(cursor.getColumnIndex( COLUMN_USER_PASSWORD));
         cursor.close();
@@ -201,18 +225,19 @@ class LoginDatabaseHelper extends SQLiteOpenHelper {
         //OPEN DATABASE
         SQLiteDatabase db = this.getWritableDatabase();
 
-        //CREATE CURSOR WHICH ITERATES THROUGH DATABASE LOOKING FOR THE USERNAME
-        Cursor cursor=db.query(TABLE_USER, null, COLUMN_USER_EMAIL + " =?", new String[]{userName}, null, null, null);
+        //CREATE CURSOR WHICH ITERATES THROUGH DATABASE'S USERNAME TABLE LOOKING FOR THE USERNAME PROVIDED
+        Cursor cursor=db.query(TABLE_USER, null, COLUMN_USER_NAME + " =?", new String[]{userName}, null, null, null);
 
-        if(cursor.getCount()<1) {//IF THE USERNAME IS NOT FOUND MEANING IT FOUNDED LESS THAN 1 TIMES
+        //IF THE USERNAME IS NOT FOUND IN THE DATABASE AT LEAST ONCE
+        if(cursor.getCount()<1) {
             cursor.close();
             return "Username does not exist";
         }
         cursor.moveToFirst();
         //ASSIGN THE PASSWORD ASSIGNED TO THIS USERNAME TO THE VARIABLE PASSWORD
-        String password= cursor.getString(cursor.getColumnIndex( COLUMN_USER_PASSWORD));
+        String email= cursor.getString(cursor.getColumnIndex( COLUMN_USER_EMAIL));
         cursor.close();
-        return password;
+        return email;
     }
 
     //CHECKS IF THE USERNAME PROVIDED IS IN THE DATABASE--------------------------------------------

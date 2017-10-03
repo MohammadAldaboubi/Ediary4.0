@@ -7,13 +7,13 @@ package barryalan.ediary10;
 
 public class User {
 
-    //CLASS VARIABLES---------------------------------------------------------------------
+//CLASS VARIABLES-----------------------------------------------------------------------------------
     private int userId;
     private String userName;
     private String userEmail;
     private String userPassword;
 
-    //CONSTRUCTORS------------------------------------------------------------------------
+//CONSTRUCTORS--------------------------------------------------------------------------------------
     //DEFAULT CONSTRUCTOR
     public User() {
     }
@@ -32,7 +32,8 @@ public class User {
         this.userEmail = userEmail;
         this.userPassword = userPassword;
     }
-    //GET METHODS--------------------------------------------------------------------------
+
+//GET METHODS---------------------------------------------------------------------------------------
     public int getId() {return userId;}
 
     public String getUserName() {return userName;}
@@ -41,7 +42,7 @@ public class User {
 
     public String getuserPassword() {return userPassword;}
 
-    //SETTER METHODS -------------------------------------------------------------------------
+//SETTER METHODS------------------------------------------------------------------------------------
     public void setUserId(int userId){this.userId = userId;}
 
     public void setUserName(String userName) {this.userName = userName;}

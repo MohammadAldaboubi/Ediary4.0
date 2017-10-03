@@ -179,7 +179,7 @@ public class Registration extends AppCompatActivity {
     public boolean doesPasswordContainNumber(EditText et_password){
         //.* means any character from 0 to infinite occurence, than the \\d+
         // (double backslash I think is just to escape the second backslash) and \d+ means a digit from 1 time to infinite.
-        if(et_password.getText().toString().contains(".*\\d+.*")) {
+        if(et_password.getText().toString().contains("1")) {//".*\\d+.*"
             return true;
         }
         et_password.setError("Password must contain at least one number");
