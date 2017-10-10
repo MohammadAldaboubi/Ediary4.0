@@ -18,7 +18,7 @@ public class User {
     private String userVitalSigns;
     private String userExcercisePlan;
 
-
+    public static String currentUserName = "";
 
     //CONSTRUCTORS--------------------------------------------------------------------------------------
     //DEFAULT CONSTRUCTOR
@@ -40,19 +40,19 @@ public class User {
         this.userPassword = userPassword;
     }
 
-    //PARAMETIZED CONSTRUCTOR USED IN HEALTH CARE PAGE
-   // public User(int userId,String userName, String userEmail, String userPassword, String userAllergies,
-           //     String userMedication, String userDiet, String userExcercisePlan, String userVitalSigns) {
-//        this.userId = userId;
-//        this.userName = userName;
-//        this.userEmail = userEmail;
-//        this.userPassword = userPassword;
-//        this.userMedication = userMedication;
-//        this.userAllergies = userAllergies;
-//        this.userVitalSigns = userVitalSigns;
-//        this.userDiet = userDiet;
-//        this.userExcercisePlan = userExcercisePlan;
-//    }
+   // PARAMETIZED CONSTRUCTOR USED IN HEALTH CARE PAGE
+    public User(int userId,String userName, String userEmail, String userPassword, String userAllergies,
+                String userMedication, String userDiet, String userExcercisePlan, String userVitalSigns) {
+        this.userId = userId;
+        this.userName = userName;
+        this.userEmail = userEmail;
+        this.userPassword = userPassword;
+        this.userMedication = userMedication;
+        this.userAllergies = userAllergies;
+        this.userVitalSigns = userVitalSigns;
+        this.userDiet = userDiet;
+        this.userExcercisePlan = userExcercisePlan;
+    }
 
 //GET METHODS---------------------------------------------------------------------------------------
     public int getId() {return userId;}
@@ -93,4 +93,6 @@ public class User {
     public void setUserExcercisePlan(String userExcercisePlan) {this.userExcercisePlan = userExcercisePlan;}
 
     public void setUserDiet(String userDiet) {this.userDiet = userDiet;}
+
+    public void setCurrentUserName(String username){ this.currentUserName = username; }
 }

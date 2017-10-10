@@ -16,7 +16,7 @@ import java.util.List;
 
 class LoginDatabaseHelper extends SQLiteOpenHelper {
     //CLASS VARIABLES-------------------------------------------------------------------------------
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 3;
     private static final String DATABASE_NAME = "LoginManager";
     private static final String TABLE_USER = "users";
 
@@ -52,10 +52,10 @@ class LoginDatabaseHelper extends SQLiteOpenHelper {
         //CREATES QUERY
         String CREATE_USER_TABLE = "CREATE TABLE " + TABLE_USER + "("
                 + COLUMN_USER_ID + " INTEGER PRIMARY KEY," + COLUMN_USER_NAME + " TEXT," +
-                COLUMN_USER_EMAIL + " TEXT," + COLUMN_USER_PASSWORD + " TEXT" + COLUMN_USER_ALLERGIES
-                + "TEXT" + COLUMN_USER_MEDICATION + "TEXT" + COLUMN_USER_DIET + "TEXT"
-                + COLUMN_USER_EXCERCISEPLAN + "TEXT" +
-                COLUMN_USER_VITALSIGNS + "TEXT" + ")";
+                COLUMN_USER_EMAIL + " TEXT," + COLUMN_USER_PASSWORD + " TEXT," + COLUMN_USER_ALLERGIES
+                + " TEXT," + COLUMN_USER_MEDICATION + " TEXT," + COLUMN_USER_DIET + " TEXT,"
+                + COLUMN_USER_EXCERCISEPLAN + " TEXT," +
+                COLUMN_USER_VITALSIGNS + " TEXT" + ")";
 
 
 
@@ -101,7 +101,12 @@ class LoginDatabaseHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(COLUMN_USER_NAME, user.getUserName());
         values.put(COLUMN_USER_EMAIL, user.getUserEmail());
-        values.put(COLUMN_USER_PASSWORD, user.getuserPassword());
+        values.put(COLUMN_USER_ALLERGIES, user.getUserAllergies());
+        values.put(COLUMN_USER_MEDICATION, user.getUserMedications());
+        values.put(COLUMN_USER_VITALSIGNS, user.getUserVitalSigns());
+        values.put(COLUMN_USER_DIET, user.getUserDiet());
+        values.put(COLUMN_USER_EXCERCISEPLAN, user.getUserExcercisePlan());
+
 
         //UPDATE ROWS IN DATABASE WITH VALUES (INFO FROM PARAMETER)
         return db.update(TABLE_USER, values, COLUMN_USER_ID + "= ?", new String[]{String.valueOf(user.getId())});
@@ -174,25 +179,30 @@ class LoginDatabaseHelper extends SQLiteOpenHelper {
     }
 
     //RETURNS A USERS OBJECT FOR THE ID PROVIDED online version--------------------------------------
-    User getUser(int id) {
+    User getUser(String username) {
 
         //OPEN DATABASE??
         SQLiteDatabase db = this.getReadableDatabase();
 
         //CREATE CURSOR WHICH ALLOWS SEARCH WITHIN A DATABASE TABLE
-        Cursor cursor = db.query(TABLE_USER, new String[]{COLUMN_USER_ID,COLUMN_USER_NAME,COLUMN_USER_EMAIL,COLUMN_USER_PASSWORD}, COLUMN_USER_ID + "=?",
-                new String[]{String.valueOf(id)}, null, null, null, null);
+        Cursor cursor = db.query(TABLE_USER, new String[]{COLUMN_USER_ID,COLUMN_USER_NAME,COLUMN_USER_EMAIL,
+                        COLUMN_USER_PASSWORD,COLUMN_USER_ALLERGIES,COLUMN_USER_MEDICATION,COLUMN_USER_DIET,
+                        COLUMN_USER_EXCERCISEPLAN,COLUMN_USER_VITALSIGNS}, COLUMN_USER_NAME + "=?",
+                new String[]{username}, null, null, null, null);
 
         //??
         if(cursor !=null) {
             cursor.moveToFirst();
-            cursor.close();
+
+
         }
 
         //CREATES NEW USER WITH THE DATA COLLECTED FROM THE CURSOR
-       // User user = new User(Integer.parseInt(cursor.getString(0)), cursor.getString(1), cursor.getString(2), cursor.getString(3));
+        User user = new User(Integer.parseInt(cursor.getString(0)), cursor.getString(1), cursor.getString(2), cursor.getString(3),
+                cursor.getString(4), cursor.getString(5),cursor.getString(6),cursor.getString(7),cursor.getString(8));
 
-        return new User(Integer.parseInt(cursor.getString(0)), cursor.getString(1), cursor.getString(2), cursor.getString(3));
+        cursor.close();
+        return user;
 
     }
 

@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 public class Login extends AppCompatActivity {
 
+    User User1 = new User();
     Button btn_signin;
     Button btn_forgotLogin;
     EditText et_username;
@@ -45,6 +46,7 @@ public class Login extends AppCompatActivity {
                 if (!(isEmpty(et_username)) & !(isEmpty(et_password))) {
                     if (isValid(et_username, et_password)) { //CHECK IF INFO IS A VALID USERS'
                         Log.e("hello", " got into onclick");
+                        User1.setCurrentUserName(et_username.getText().toString());
                         gotoHealthActivity(v);
                     }
                 }
