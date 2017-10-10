@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="barryalan.ediary10.health_excercise">
+
+
+    <EditText
+        android:id="@+id/et_Hallergies"
+        android:layout_width="109dp"
+        android:layout_height="37dp"
+        android:ems="10"
+        android:hint="Allergies"
+        android:layout_marginLeft="30dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintHorizontal_bias="0.042"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/tv_HpageTitle" />
+
+    <EditText
+        android:id="@+id/et_Hmedication"
+        android:layout_width="109dp"
+        android:layout_height="37dp"
+        android:ems="10"
+        android:hint="Medication"
+        android:inputType="textPersonName"
+        android:layout_marginTop="38dp"
+        app:layout_constraintTop_toBottomOf="@+id/et_Hallergies"
+        android:layout_marginLeft="30dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintHorizontal_bias="0.042" />
+
+
+    <EditText
+        android:id="@+id/et_HvitalSigns"
+        android:layout_width="109dp"
+        android:layout_height="37dp"
+        android:ems="10"
+        android:hint="Vital Signs"
+        android:inputType="textPersonName"
+        android:layout_marginTop="48dp"
+        app:layout_constraintTop_toBottomOf="@+id/et_Hmedication"
+        android:layout_marginLeft="30dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintHorizontal_bias="0.042" />
+
+    <EditText
+        android:id="@+id/et_Hdiet"
+        android:layout_width="109dp"
+        android:layout_height="37dp"
+        android:ems="10"
+        android:hint="Diet"
+        android:inputType="textPersonName"
+        android:layout_marginTop="41dp"
+        app:layout_constraintTop_toBottomOf="@+id/et_HvitalSigns"
+        android:layout_marginLeft="30dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintHorizontal_bias="0.042" />
+
+    <EditText
+        android:id="@+id/et_HexcersicePlan"
+        android:layout_width="109dp"
+        android:layout_height="37dp"
+        android:ems="10"
+        android:hint="Excersice Plan"
+        android:inputType="textPersonName"
+        android:layout_marginTop="38dp"
+        app:layout_constraintTop_toBottomOf="@+id/et_Hdiet"
+        android:layout_marginLeft="30dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintHorizontal_bias="0.042" />
+
+    <TextView
+        android:id="@+id/tv_HpageTitle"
+        android:layout_width="143dp"
+        android:layout_height="23dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="5dp"
+        android:text="HealthPage"
+        android:visibility="visible"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_Husername"
+        android:layout_width="137dp"
+        android:layout_height="25dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="5dp"
+        app:layout_constraintLeft_toRightOf="@+id/tv_HpageTitle"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+</android.support.constraint.ConstraintLayout>

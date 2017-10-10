@@ -20,11 +20,23 @@ class LoginDatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "LoginManager";
     private static final String TABLE_USER = "users";
 
+    //CLASS VARIABLES FOR HEALTH AND CARE TABLE
+    private static final String DATABASE_NAME2 = "HealthCare";
+    private static final String HEALTH_TABLE= "health";
+
+
     //USER TABLE COLUMN NAMES-----------------------------------------------------------------------
     private static final String COLUMN_USER_ID = "user_id";
     private static final String COLUMN_USER_NAME = "user_name";
     private static final String COLUMN_USER_EMAIL = "user_email";
     private static final String COLUMN_USER_PASSWORD = "user_password";
+
+    //TABLE COLUMN NAMES FOR HEALTH
+    private static final String COLUMN_USER_ALLERGIES = "allergies_name";
+    private static final String COLUMN_USER_MEDICATION = "med_name";
+    private static final String COLUMN_USER_VITALSIGNS = "vital_name";
+    private static final String COLUMN_USER_DIET = "diet_name";
+    private static final String COLUMN_USER_EXCERCISEPLAN = "excercise_plan";
 
 
     //CONSTRUCTOR-----------------------------------------------------------------------------------
@@ -33,16 +45,25 @@ class LoginDatabaseHelper extends SQLiteOpenHelper {
     }
 
 
+
     //RUNS WHEN THE DATABASE IS CREATED(APP STARTUP)------------------------------------------------
     @Override
     public void onCreate(SQLiteDatabase db) {
         //CREATES QUERY
         String CREATE_USER_TABLE = "CREATE TABLE " + TABLE_USER + "("
                 + COLUMN_USER_ID + " INTEGER PRIMARY KEY," + COLUMN_USER_NAME + " TEXT," +
-                COLUMN_USER_EMAIL + " TEXT," + COLUMN_USER_PASSWORD + " TEXT" + ")";
+                COLUMN_USER_EMAIL + " TEXT," + COLUMN_USER_PASSWORD + " TEXT" + COLUMN_USER_ALLERGIES
+                + "TEXT" + COLUMN_USER_MEDICATION + "TEXT" + COLUMN_USER_DIET + "TEXT"
+                + COLUMN_USER_EXCERCISEPLAN + "TEXT" +
+                COLUMN_USER_VITALSIGNS + "TEXT" + ")";
+
+
+
+
 
         //CREATES TABLE IN THE DATABASE USING THE QUERY
         db.execSQL(CREATE_USER_TABLE);
+
     }
 
     //NO CLUE WHAT THIS DOES------------------------------------------------------------------------

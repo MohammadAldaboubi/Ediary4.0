@@ -18,7 +18,8 @@
         </activity>
         <activity android:name=".Registration" />
         <activity android:name=".mock" />
-        <activity android:name=".forgotLogin"></activity>
+        <activity android:name=".forgotLogin" />
+        <activity android:name=".health_excercise"></activity>
     </application>
 
 </manifest>

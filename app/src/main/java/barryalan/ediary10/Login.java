@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -43,7 +44,8 @@ public class Login extends AppCompatActivity {
                 //CHECK IF THE USER INPUTTED A USERNAME AND PASSWORD
                 if (!(isEmpty(et_username)) & !(isEmpty(et_password))) {
                     if (isValid(et_username, et_password)) { //CHECK IF INFO IS A VALID USERS'
-                        // gotoMockActivity(v); // go to a different page(activity) to show that you have logged in
+                        Log.e("hello", " got into onclick");
+                        gotoHealthActivity(v);
                     }
                 }
             }
@@ -146,13 +148,13 @@ public class Login extends AppCompatActivity {
         startActivity(name);
     }
 
-    //LINK THE LOGIN PAGE TO THE INSIDE OF THE APP--------------------------------------------------
-    public void gotoMockActivity(View view) {
-        Intent name = new Intent(this, mock.class);
+    //LINK THE LOGIN PAGE TO THE HEALTH PAGE--------------------------------------------------------
+    public void gotoHealthActivity(View view) {
+        Intent name = new Intent(this, health_excercise.class);
         startActivity(name);
     }
 
-    //LINK THE LOGIN PAGE TO THE INSIDE OF THE APP--------------------------------------------------
+    //LINK THE LOGIN PAGE TO THE FORGOT LOGIN PAGE--------------------------------------------------
     public void gotoForgotLoginActivity(View view) {
         Intent name = new Intent(this, forgotLogin.class);
         startActivity(name);
