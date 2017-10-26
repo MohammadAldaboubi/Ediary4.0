@@ -16,7 +16,7 @@ import java.util.List;
 
 class LoginDatabaseHelper extends SQLiteOpenHelper {
     //CLASS VARIABLES-------------------------------------------------------------------------------
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 4;
     private static final String DATABASE_NAME = "LoginManager";
     private static final String TABLE_USER = "users";
 
@@ -38,6 +38,14 @@ class LoginDatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_USER_DIET = "diet_name";
     private static final String COLUMN_USER_EXCERCISEPLAN = "excercise_plan";
 
+    //TABLE COLUMN NAMES FOR PERSONAL GOALS
+
+    private static final String COLUMN_USER_GOALS1 = "short_goal1";
+    private static final String COLUMN_USER_GOALS2 = "short_goal2";
+    private static final String COLUMN_USER_GOALS3 = "short_goal3";
+    private static final String COLUMN_USER_GOALS4 = "short_goal4";
+    private static final String COLUMN_USER_LONGGOALS = "long_goals";
+
 
     //CONSTRUCTOR-----------------------------------------------------------------------------------
     LoginDatabaseHelper(Context context) {
@@ -55,7 +63,9 @@ class LoginDatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_USER_EMAIL + " TEXT," + COLUMN_USER_PASSWORD + " TEXT," + COLUMN_USER_ALLERGIES
                 + " TEXT," + COLUMN_USER_MEDICATION + " TEXT," + COLUMN_USER_DIET + " TEXT,"
                 + COLUMN_USER_EXCERCISEPLAN + " TEXT," +
-                COLUMN_USER_VITALSIGNS + " TEXT" + ")";
+                COLUMN_USER_VITALSIGNS + " TEXT," + COLUMN_USER_GOALS1 + " TEXT," + COLUMN_USER_GOALS2
+                + " TEXT," + COLUMN_USER_GOALS3 + " TEXT," + COLUMN_USER_GOALS4 + " TEXT,"
+                + COLUMN_USER_LONGGOALS + " TEXT" + ")";
 
 
 
@@ -106,6 +116,11 @@ class LoginDatabaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_USER_VITALSIGNS, user.getUserVitalSigns());
         values.put(COLUMN_USER_DIET, user.getUserDiet());
         values.put(COLUMN_USER_EXCERCISEPLAN, user.getUserExcercisePlan());
+        values.put(COLUMN_USER_GOALS1, user.getUserGoal1());
+        values.put(COLUMN_USER_GOALS2, user.getUserGoal2());
+        values.put(COLUMN_USER_GOALS3, user.getUserGoal3());
+        values.put(COLUMN_USER_GOALS4, user.getUserGoal4());
+        values.put(COLUMN_USER_LONGGOALS, user.getUserLongGoal());
 
 
         //UPDATE ROWS IN DATABASE WITH VALUES (INFO FROM PARAMETER)
@@ -185,23 +200,27 @@ class LoginDatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         //CREATE CURSOR WHICH ALLOWS SEARCH WITHIN A DATABASE TABLE
-        Cursor cursor = db.query(TABLE_USER, new String[]{COLUMN_USER_ID,COLUMN_USER_NAME,COLUMN_USER_EMAIL,
-                        COLUMN_USER_PASSWORD,COLUMN_USER_ALLERGIES,COLUMN_USER_MEDICATION,COLUMN_USER_DIET,
-                        COLUMN_USER_EXCERCISEPLAN,COLUMN_USER_VITALSIGNS}, COLUMN_USER_NAME + "=?",
-                new String[]{username}, null, null, null, null);
+        User user;
+        try (Cursor cursor = db.query(TABLE_USER, new String[]{COLUMN_USER_ID, COLUMN_USER_NAME, COLUMN_USER_EMAIL,
+                        COLUMN_USER_PASSWORD, COLUMN_USER_ALLERGIES, COLUMN_USER_MEDICATION, COLUMN_USER_DIET,
+                        COLUMN_USER_EXCERCISEPLAN, COLUMN_USER_VITALSIGNS, COLUMN_USER_GOALS1, COLUMN_USER_GOALS2,
+                        COLUMN_USER_GOALS3, COLUMN_USER_GOALS4, COLUMN_USER_LONGGOALS}, COLUMN_USER_NAME + "=?",
+                new String[]{username}, null, null, null, null)) {
 
-        //??
-        if(cursor !=null) {
-            cursor.moveToFirst();
+            //??
+            if (cursor != null) {
+                cursor.moveToFirst();
 
 
+            }
+
+            //CREATES NEW USER WITH THE DATA COLLECTED FROM THE CURSOR
+            user = new User(Integer.parseInt(cursor.getString(0)), cursor.getString(1), cursor.getString(2), cursor.getString(3),
+                    cursor.getString(4), cursor.getString(5), cursor.getString(6), cursor.getString(7), cursor.getString(8),
+                    cursor.getString(9), cursor.getString(10), cursor.getString(11), cursor.getString(12), cursor.getString(13));
+
+            cursor.close();
         }
-
-        //CREATES NEW USER WITH THE DATA COLLECTED FROM THE CURSOR
-        User user = new User(Integer.parseInt(cursor.getString(0)), cursor.getString(1), cursor.getString(2), cursor.getString(3),
-                cursor.getString(4), cursor.getString(5),cursor.getString(6),cursor.getString(7),cursor.getString(8));
-
-        cursor.close();
         return user;
 
     }
